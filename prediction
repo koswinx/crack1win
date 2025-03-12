@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогнозы на игры</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Выберите игру</h1>
+    <div class="game-links">
+        <a href="aviator.html">Aviator</a>
+        <a href="mines.html">Mines</a>
+        <a href="penalty.html">Penalty Shoot-Out</a>
+    </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Aviator</h1>
+    <button onclick="getAviatorPrediction()">Получить прогноз</button>
+    <p id="aviatorResult" class="result"></p>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mines</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Mines</h1>
+    <label>Выберите размер сетки:</label>
+    <select id="gridSize" onchange="generateMinesGrid()">
+        <option value="3">3x3</option>
+        <option value="5">5x5</option>
+    </select>
+    <div id="minesGrid" class="grid"></div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penalty Shoot-Out</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Penalty Shoot-Out</h1>
+    <div id="goal">
+        <div class="goal-spot" onclick="highlightSpot(0)"></div>
+        <div class="goal-spot" onclick="highlightSpot(1)"></div>
+        <div class="goal-spot" onclick="highlightSpot(2)"></div>
+    </div>
+    <button onclick="getPenaltyPrediction()">Куда бить?</button>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+h1 {
+    color: #333;
+}
+.game-links a {
+    display: block;
+    margin: 10px auto;
+    padding: 15px;
+    font-size: 20px;
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 10px;
+    max-width: 300px;
+}
+button {
+    padding: 15px;
+    font-size: 18px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+.result {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+.grid {
+    display: grid;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 20px;
+}
+.grid div {
+    width: 60px;
+    height: 60px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.grid div.active {
+    background-color: yellow;
+}
+#goal {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.goal-spot {
+    width: 70px;
+    height: 70px;
+    background-color: lightgray;
+    margin: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.goal-spot.active {
+    background-color: red;
+}
+
+/* Адаптация под мобильные устройства */
+@media (max-width: 768px) {
+    .grid div {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+    }
+    .goal-spot {
+        width: 60px;
+        height: 60px;
+    }
+    button {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+function getAviatorPrediction() {
+    const options = ["Выводи на x1.3", "Жди x2.0", "Рискни до x3", "Не ставь в этом раунде"];
+    document.getElementById("aviatorResult").innerText = options[Math.floor(Math.random() * options.length)];
+}
+
+function generateMinesGrid() {
+    let size = document.getElementById("gridSize").value;
+    let grid = document.getElementById("minesGrid");
+    grid.innerHTML = "";
+    grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+
+    for (let i = 0; i < size * size; i++) {
+        let cell = document.createElement("div");
+        cell.addEventListener("click", () => cell.classList.toggle("active"));
+        grid.appendChild(cell);
+    }
+}
+
+function getPenaltyPrediction() {
+    let spots = document.querySelectorAll(".goal-spot");
+    spots.forEach(spot => spot.classList.remove("active"));
+    let randomSpot = Math.floor(Math.random() * spots.length);
+    spots[randomSpot].classList.add("active");
+}
